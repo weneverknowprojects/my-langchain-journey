@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field
+
+from color import Color
 """
 {
   "product_name": "Smoked Beef & Melted Mozzarella Fried Bread",
@@ -36,3 +38,6 @@ class LaunchingProductModel(BaseModel):
     open_po_details: OpenPODetails = Field(..., description="Details regarding the open purchase order for the product.")
     seo_keywords: list[str] = Field(..., description="A list of SEO keywords associated with the product.")
     social_media_hashtags: list[str] = Field(..., description="A list of social media hashtags for the product.")
+
+    def __str__(self):
+        return f"{Color.GREEN}Product Name: {self.name} \n{Color.CYAN}Tagline: {self.tagline} \n{Color.YELLOW}Open PO Details: {self.open_po_details} \n{Color.BLUE}SEO Keywords: {self.seo_keywords} \n{Color.MAGENTA}Social Media Hashtags: {self.social_media_hashtags}"
