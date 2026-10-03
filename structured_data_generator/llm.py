@@ -1,8 +1,7 @@
 from langchain_openrouter import ChatOpenRouter
-
 from launching_product_model import LaunchingProductModel
-
 from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import PydanticOutputParser
 
 model = ChatOpenRouter(
     model="google/gemma-4-26b-a4b-it:free",
@@ -37,6 +36,21 @@ def generate_launching_product(product:str, description: str):
     # call LLM API with message
     response = model_structured_data.invoke(messages)
     
+    print(str(response))
+
+def generate_launching_product_with_pydantic_parser_output(product: str, description: str):
+    parser = PydanticOutputParser(pydantic_object=LaunchingProductModel)
+    template = """
+    You are a product marketing assistant. You will be given a product name and its description. you will generate marketing content include the product name, tagline, marketing copy, open purchase order details, SEO keywords, and social media.
+    Product Name: {product}
+    Product Description: {description}
+    """
+    prompt = PromptTemplate(template=template, input_variables=["product", "description"], partial_variables={"format_instructions": parser.get_format_instructions()})
+
+    # use LCEL (pipe syntax) to combine prompt, model, and parser
+    # flow: prompt -> model -> parser
+    chain = prompt | ollamaModel | parser
+    response = chain.invoke({"product": product, "description": description})
     print(str(response))
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 from color import Color
-from llm import generate_launching_product
+from llm import generate_launching_product, generate_launching_product_with_pydantic_parser_output
 
 
 def main():
@@ -17,6 +17,7 @@ if __name__ == "__main__":
 
     print(f"{Color.DIM}Please wait while we generate a structured output for your product: {productName} with details: {detailProduct}")
     print(f"{Color.DIM}.........................................\n")
-    generate_launching_product(productName, detailProduct)
+    generate_launching_product_with_pydantic_parser_output(productName, detailProduct)
+    # generate_launching_product(productName, detailProduct)
         
 
