@@ -2,12 +2,28 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 import numpy as np
 from langchain_community.vectorstores import FAISS
-
+from langchain_chroma import Chroma
+import uuid
 
  # Initialize HuggingFace embeddings
 embeddings = HuggingFaceEmbeddings(
             model="sentence-transformers/all-mpnet-base-v2"
         )
+# Initialize chroma and save into disk (default save to memory)
+my_chroma = Chroma(
+    collection_name='qna',
+    embedding_function=embeddings,
+    persist_directory='./qna_vector_db'
+)
+def load_chroma_db() -> Chroma:
+    return my_chroma
+
+def embed_using_chroma(docs: list[Document]):
+    """
+    embed and store to chromadb
+    """
+    # embed and save vector    
+    my_chroma.add_documents(documents=docs, ids=[str(uuid.uuid4()) if doc.id==None else doc.id for doc in docs])
 
 def load_db_faiss() -> FAISS|None:
     """

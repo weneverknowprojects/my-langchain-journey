@@ -1,6 +1,7 @@
 from langchain_core.documents import Document
 from langchain_community.vectorstores import FAISS
 from llm_manager import send_message
+from langchain_chroma import Chroma
 
 def retrieve_documents(query: str, db: FAISS) -> list[Document]|None:
     """
@@ -30,4 +31,13 @@ def retrieve(query:str, db: FAISS) -> str|None:
         return result.content
     except Exception as e:
         print(f"retrieve error {e}")
+        return None
+
+def retrieve_from_chroma(query: str, db: Chroma) -> str|None:
+    try:
+        docs = db.similarity_search(query=query, k=2)
+        context = "\n".join([doc.page_content for doc in docs])
+        result = send_message(query=query, context=context)
+        return result.content
+    except Exception as e:
         return None
