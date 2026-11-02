@@ -35,7 +35,7 @@ def retrieve(query:str, db: FAISS) -> str|None:
 
 def retrieve_from_chroma(query: str, db: Chroma) -> str|None:
     try:
-        docs = db.similarity_search(query=query, k=2)
+        docs = db.similarity_search(query=query, k=4)
         context = "\n".join([doc.page_content for doc in docs])
         result = send_message(query=query, context=context)
         return result.content
